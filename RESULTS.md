@@ -17,7 +17,8 @@
   - รันปกติ: ผ่านครบทั้ง 3 rules คือ checks rate=100.00%, http_req_duration p(95)=374.05ms (< 1500) และ http_req_failed rate=0.00% (68 requests, 2.19 requests/s)
   - รันด้วย `-e P95=300`: rule `p(95)<300` ไม่ผ่าน เพราะวัดได้ p(95)=391.85ms และ k6 แจ้งว่า "thresholds on metrics 'http_req_duration' have been crossed" แม้ checks จะผ่าน 100% แต่ test ทั้งชุดก็ fail เพราะ threshold
   - pipeline อย่าง GitHub Actions อ่าน exit code 99 แล้วสั่งให้ build fail ได้เลย
-- Step 0.7, rules that passed, p(95), p(99), exit code after your change:
+- Step 0.7, rules that passed, p(95), p(99), exit code after your change: ผ่านครบทั้ง 3 rules ได้ p(95) = 384.45ms (< 1000), p(99) = 389.7ms (< 1500), http_req_failed = 0.00% (< 1%) และ exit code 0 จากนั้นเปลี่ยน requirement จาก "95% ภายใน 1 วินาที" เป็น "95% ภายใน 0.3 วินาที" (รันด้วย `-e P95=300`) rule `p(95)<300` จึงไม่ผ่าน (วัดได้ p(95) = 371.09ms) และได้ exit code 99
+  - script ตั้ง `vus: 3`, `duration: '30s'` และใส่ thresholds ตาม requirement พอดี คือ `http_req_duration: ['p(95)<1000', 'p(99)<1500']` กับ `http_req_failed: ['rate<0.01']` ไม่ได้ใส่ threshold ของ checks เพราะ requirement ไม่ได้พูดถึง และเพิ่ม `summaryTrendStats` ให้ summary แสดง p(99) ด้วย
 - Step 0.8, what was wrong, and how the checks showed it:
 
 ## Part A results
