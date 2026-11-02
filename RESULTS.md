@@ -27,11 +27,14 @@
 ## Part A results
 | Step | Test type    | Users | Req/s | p(95) | Max | Failed | Checks |
 | ---- | ------------ | ----- | ----- | ----- | --- | ------ | ------ |
-| A1   | Smoke        | 1     |       |       |     |        |        |
+| A1   | Smoke        | 1     | 0.53  | 361.1ms | 375.13ms | 0.00% | 100.00% |
 | A2   | Average load | 3     |       |       |     |        |        |
 | A3   | Stress       | 5     |       |       |     |        |        |
 | A4   | Spike        | 5     |       |       |     |        |        |
 | A5   | Soak         | 2     |       |       |     |        |        |
+
+หมายเหตุของแต่ละ step
+- A1: checks ผ่าน 24 out of 24 และ thresholds ทั้ง 2 ข้อผ่าน (exit code 0) แสดงว่า script ใช้งานได้และพร้อมรัน test ที่ใหญ่กว่า ใน 30s มี 1 VU ทำได้ 6 iterations (18 requests) เพราะแต่ละ iteration ใช้เวลาเฉลี่ย 5.69s ซึ่งส่วนใหญ่เป็น think time
 
 ## Part B
 1.
