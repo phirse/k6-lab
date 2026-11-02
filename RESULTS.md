@@ -11,6 +11,8 @@
   - --duration ให้ load ต่อเนื่องตลอดช่วงเวลาที่กำหนด จำนวน request จึงขึ้นกับความเร็วของระบบ ส่วน --iterations ให้ปริมาณงานที่แน่นอน เวลาที่ใช้จึงขึ้นกับความเร็วของระบบแทน
 - Step 0.4, testing an API: checks ผ่านครบทั้ง 3 ข้อ (100.00% 3 out of 3) และ http_req_duration = 378.14ms
   - check ข้อที่ 3 อ่าน pizza.ingredients ใน JSON แล้วตรวจว่าทุก ingredient เป็น vegetarian จริง ถ้าดูแค่ status 200 จะไม่รู้ว่า API ตอบเร็วแต่ตอบผิดหรือเปล่า
+- Step 0.5, a request that must be refused: API ตอบ 401 ตามที่ควร check "request without a token is refused" ผ่าน (100.00% 1 out of 1) และ http_req_failed = 0.00% 0 out of 1
+  - http.expectedStatuses(401) บอก k6 ว่า 401 คือคำตอบที่ถูกต้องของ request นี้ ถ้าไม่ใส่ k6 จะนับ 401 เป็น failed request เพราะ status ตั้งแต่ 400 ขึ้นไปถือว่า fail ทั้งหมด
 - Step 0.6, exit code of the normal run and of the run with P95=300:
 - Step 0.7, rules that passed, p(95), p(99), exit code after your change:
 - Step 0.8, what was wrong, and how the checks showed it:
