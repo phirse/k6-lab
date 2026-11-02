@@ -28,13 +28,14 @@
 | Step | Test type    | Users | Req/s | p(95) | Max | Failed | Checks |
 | ---- | ------------ | ----- | ----- | ----- | --- | ------ | ------ |
 | A1   | Smoke        | 1     | 0.53  | 361.1ms | 375.13ms | 0.00% | 100.00% |
-| A2   | Average load | 3     |       |       |     |        |        |
+| A2   | Average load | 3     | 1.34  | 362.57ms | 377.38ms | 0.00% | 100.00% |
 | A3   | Stress       | 5     |       |       |     |        |        |
 | A4   | Spike        | 5     |       |       |     |        |        |
 | A5   | Soak         | 2     |       |       |     |        |        |
 
 หมายเหตุของแต่ละ step
 - A1: checks ผ่าน 24 out of 24 และ thresholds ทั้ง 2 ข้อผ่าน (exit code 0) แสดงว่า script ใช้งานได้และพร้อมรัน test ที่ใหญ่กว่า ใน 30s มี 1 VU ทำได้ 6 iterations (18 requests) เพราะแต่ละ iteration ใช้เวลาเฉลี่ย 5.69s ซึ่งส่วนใหญ่เป็น think time
+- A2: ผ่านทุก threshold คือ home p(95) = 268.78ms (< 1000), recommendation p(95) = 372.06ms (< 1500), checks 100% และ failed 0% (243 requests, exit code 0) ในส่วน Overview ของ report จำนวน VUs ขึ้นจาก 1 เป็น 3 ภายใน 30s แล้วค้างไว้ request rate ขึ้นตามเป็นประมาณ 1.4–1.7 req/s ช่วงที่ค้าง 3 VUs ส่วน p(95) รายช่วง 10 วินาทีอยู่ระหว่าง 325–369ms ตลอดการรันและไม่ได้สูงขึ้นตามจำนวน VUs
 
 ## Part B
 1.
