@@ -19,7 +19,10 @@
   - pipeline อย่าง GitHub Actions อ่าน exit code 99 แล้วสั่งให้ build fail ได้เลย
 - Step 0.7, rules that passed, p(95), p(99), exit code after your change: ผ่านครบทั้ง 3 rules ได้ p(95) = 384.45ms (< 1000), p(99) = 389.7ms (< 1500), http_req_failed = 0.00% (< 1%) และ exit code 0 จากนั้นเปลี่ยน requirement จาก "95% ภายใน 1 วินาที" เป็น "95% ภายใน 0.3 วินาที" (รันด้วย `-e P95=300`) rule `p(95)<300` จึงไม่ผ่าน (วัดได้ p(95) = 371.09ms) และได้ exit code 99
   - script ตั้ง `vus: 3`, `duration: '30s'` และใส่ thresholds ตาม requirement พอดี คือ `http_req_duration: ['p(95)<1000', 'p(99)<1500']` กับ `http_req_failed: ['rate<0.01']` ไม่ได้ใส่ threshold ของ checks เพราะ requirement ไม่ได้พูดถึง และเพิ่ม `summaryTrendStats` ให้ summary แสดง p(99) ด้วย
-- Step 0.8, what was wrong, and how the checks showed it:
+- Step 0.8, what was wrong, and how the checks showed it: request ส่งชื่อเป็นตัวพิมพ์เล็ก (`'pepperoni'`, `'knife'`) แต่ QuickPizza ใช้ชื่อ `"Pepperoni"` และ `"Knife"` (explore.js แสดง tools เป็น `["Knife","Pizza cutter","Scissors"]` และ topping ชื่อ `"Pepperoni"`) API เทียบชื่อแบบตรงตัว จึงหาของที่ต้องตัดออกไม่เจอและไม่ได้ตัดอะไรออกเลย แต่ก็ไม่แจ้ง error ใด ๆ เพราะ status ยังเป็น 200 ทุก request และ http_req_failed = 0.00%
+  - ก่อนแก้ (5 VUs 20s, 75 requests): checks_succeeded 87.55% (197 out of 225) โดย "no pepperoni" ผ่าน 86% (✓ 65 / ✗ 10) และ "no knife needed" ผ่าน 76% (✓ 57 / ✗ 18) แปลว่ามีพิซซ่า 10 ถาดที่ใส่ pepperoni และ 18 ถาดที่ต้องใช้มีดตัด ซึ่งลูกค้าไม่ได้ขอ
+  - แก้เป็น `excludedIngredients: ['Pepperoni']` และ `excludedTools: ['Knife']` แล้วรันใหม่ (5 VUs 20s, 75 requests) checks ผ่าน 100.00% (225 out of 225)
+  - ทำไม load ถึงจับได้: API สุ่มพิซซ่าใหม่ทุกครั้ง และ request ส่วนใหญ่ (อย่างน้อย 47 จาก 75 ครั้ง) ได้พิซซ่าที่บังเอิญผ่านทั้งสองข้ออยู่แล้ว ถ้าลองส่งด้วยมือครั้งเดียวก็มีโอกาสสูงที่จะเห็นผลถูกและคิดว่าระบบไม่มีปัญหา แต่ภายใต้ load มี 75 requests และทุก request ถูก check จึงเห็นบั๊กที่เกิดแค่บางครั้งออกมาเป็นอัตราที่ชัดเจนใน summary
 
 ## Part A results
 | Step | Test type    | Users | Req/s | p(95) | Max | Failed | Checks |
