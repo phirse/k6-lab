@@ -13,7 +13,10 @@
   - check ข้อที่ 3 อ่าน pizza.ingredients ใน JSON แล้วตรวจว่าทุก ingredient เป็น vegetarian จริง ถ้าดูแค่ status 200 จะไม่รู้ว่า API ตอบเร็วแต่ตอบผิดหรือเปล่า
 - Step 0.5, a request that must be refused: API ตอบ 401 ตามที่ควร check "request without a token is refused" ผ่าน (100.00% 1 out of 1) และ http_req_failed = 0.00% 0 out of 1
   - http.expectedStatuses(401) บอก k6 ว่า 401 คือคำตอบที่ถูกต้องของ request นี้ ถ้าไม่ใส่ k6 จะนับ 401 เป็น failed request เพราะ status ตั้งแต่ 400 ขึ้นไปถือว่า fail ทั้งหมด
-- Step 0.6, exit code of the normal run and of the run with P95=300:
+- Step 0.6, exit code of the normal run and of the run with P95=300: รันปกติได้ exit code 0 และรันด้วย P95=300 ได้ exit code 99
+  - รันปกติ: ผ่านครบทั้ง 3 rules คือ checks rate=100.00%, http_req_duration p(95)=374.05ms (< 1500) และ http_req_failed rate=0.00% (68 requests, 2.19 requests/s)
+  - รันด้วย `-e P95=300`: rule `p(95)<300` ไม่ผ่าน เพราะวัดได้ p(95)=391.85ms และ k6 แจ้งว่า "thresholds on metrics 'http_req_duration' have been crossed" แม้ checks จะผ่าน 100% แต่ test ทั้งชุดก็ fail เพราะ threshold
+  - pipeline อย่าง GitHub Actions อ่าน exit code 99 แล้วสั่งให้ build fail ได้เลย
 - Step 0.7, rules that passed, p(95), p(99), exit code after your change:
 - Step 0.8, what was wrong, and how the checks showed it:
 
