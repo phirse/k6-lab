@@ -9,6 +9,8 @@
   - ทุก iteration มี sleep(1) อยู่แล้ว iteration หนึ่งจึงใช้เวลามากกว่า 1 วินาทีเสมอ rate จึงไม่มีทางถึง 5 request/s นอกจากนี้ iteration แรกของแต่ละ VU ต้องเปิด connection ใหม่จึงนานกว่าปกติ (iteration_duration max = 2.39s)
 - Step 0.3, a fixed number of iterations: iterations = 20 พอดี (20 requests, checks 100.00% 20 out of 20, p(95) = 260.4ms) และจบใน 5.6s ทันทีที่ iteration ที่ 20 เสร็จ โดย 5 VUs แบ่ง 20 iterations กันทำ (shared iterations) เฉลี่ยตัวละ 4 รอบ
   - --duration ให้ load ต่อเนื่องตลอดช่วงเวลาที่กำหนด จำนวน request จึงขึ้นกับความเร็วของระบบ ส่วน --iterations ให้ปริมาณงานที่แน่นอน เวลาที่ใช้จึงขึ้นกับความเร็วของระบบแทน
+- Step 0.4, testing an API: checks ผ่านครบทั้ง 3 ข้อ (100.00% 3 out of 3) และ http_req_duration = 378.14ms
+  - check ข้อที่ 3 อ่าน pizza.ingredients ใน JSON แล้วตรวจว่าทุก ingredient เป็น vegetarian จริง ถ้าดูแค่ status 200 จะไม่รู้ว่า API ตอบเร็วแต่ตอบผิดหรือเปล่า
 - Step 0.6, exit code of the normal run and of the run with P95=300:
 - Step 0.7, rules that passed, p(95), p(99), exit code after your change:
 - Step 0.8, what was wrong, and how the checks showed it:
